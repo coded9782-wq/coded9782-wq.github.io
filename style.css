@@ -249,10 +249,6 @@ section { padding: clamp(70px, 10vw, 130px) 0; }
   background: var(--card); border-radius: 28px; padding: 30px;
   border: 1px solid var(--rule); position: relative;
 }
-.ticket::after { /* perforation */
-  content: ""; position: absolute; left: 26px; right: 26px; bottom: 112px;
-  border-top: 1.5px dashed var(--rule);
-}
 .ticket .top { display: flex; align-items: center; gap: 16px; }
 .ticket .top img { width: 64px; height: 64px; border-radius: 18px; }
 .ticket h3 { font-family: var(--serif); font-weight: 600; font-size: 34px; line-height: 1; margin: 0; }
@@ -391,8 +387,118 @@ footer { padding: 60px 0 0; overflow: hidden; border-top: 1px solid var(--ink); 
 
 /* real screenshots */
 .phone .screen-img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 36px; display: block; background: #f2f9f3; }
-.phone { aspect-ratio: 412 / 892; padding: 10px; }
-.shot { aspect-ratio: 412 / 892; }
+.phone { aspect-ratio: 480 / 1040; padding: 10px; }
+.shot { aspect-ratio: 480 / 1040; }
 
 .stage .peek { right: -58px; bottom: auto; top: 6%; transform: rotate(14deg); }
 @media (max-width: 420px) { .stage .peek { right: -26px; } }
+
+/* ================= mobile polish ================= */
+.btn { white-space: nowrap; }
+.swipe-hint { display: none; }
+.ticket .btn { margin-top: 8px; }
+.ticket dl { padding-bottom: 22px; border-bottom: 1.5px dashed var(--rule); margin-bottom: 22px; }
+
+@media (max-width: 860px) {
+  section { padding: 64px 0; }
+  .head { margin-bottom: 28px; }
+  .hero { gap: 48px; padding-bottom: 56px; }
+  .stage { margin: 0 auto; width: min(250px, 66vw); }
+  .stage .peek { width: 84px; right: -40px; }
+
+  /* features: swipeable cards */
+  .swipe-hint { display: block; color: var(--ink-2); margin: -8px 0 14px; }
+  .feat-track {
+    display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin: 0 calc(-1 * var(--gut)); padding: 4px var(--gut) 20px;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .feat-track::-webkit-scrollbar { display: none; }
+  .feat-track .feat, .feat-track .feat.flip {
+    flex: 0 0 86%; scroll-snap-align: center;
+    display: flex; flex-direction: column; gap: 18px;
+    padding: 22px 18px 24px; margin: 0;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 28px;
+    opacity: 1; transform: none;
+  }
+  .feat-track .shot { width: 190px; transform: none !important; border-radius: 30px; padding: 7px; order: 0 !important; }
+  .feat-track .shot img { border-radius: 24px; }
+  .feat h3 { font-size: 25px; margin: 12px 0 10px; }
+  .why { font-size: 16px; margin-bottom: 14px; }
+  .feat li { font-size: 15px; padding-left: 26px; }
+  .feat li::before { width: 17px; height: 17px; top: 3px; background-size: 11px; }
+  .also { margin-top: 28px; padding-top: 26px; }
+  .also li { font-size: 16px; }
+
+  .facts b { font-size: 30px; }
+  .facts span { font-size: 15px; }
+}
+
+@media (max-width: 560px) {
+  .hero .kicker { font-size: 12px; gap: 10px; }
+  .hero .kicker span:last-child { display: none; }
+
+  /* timeline: compact 2 x 2 */
+  .day { grid-template-columns: 1fr 1fr; gap: 26px 16px; border-top: 0; }
+  .day .moment, .day .moment + .moment {
+    padding: 18px 0 0; margin: 0; border-left: 0; border-top: 1px solid var(--ink);
+  }
+  .day .moment .dot { left: 0 !important; }
+  .moment time { font-size: 34px; }
+  .moment time small { font-size: 12px; }
+  .moment h3 { font-size: 16px; margin: 10px 0 4px; }
+  .moment p { font-size: 14.5px; line-height: 1.5; }
+
+  /* who: compact 2 x 2 */
+  .who-grid { grid-template-columns: 1fr 1fr; gap: 24px 16px; border-top: 0; }
+  .who-grid div, .who-grid div + div { padding: 16px 0 0; border-left: 0; border-top: 1px solid var(--ink); }
+  .who-grid h3 { font-size: 18px; }
+  .who-grid p { font-size: 14.5px; line-height: 1.5; }
+
+  .dark .grid p { font-size: 15.5px; }
+  .dark .sleepy { width: 74px; top: 40px; }
+  .ticket { padding: 22px; }
+  .price b { font-size: 46px; }
+  .ticket .btn { font-size: 15.5px; padding: 15px 18px; }
+  .steps p, .faq details p { font-size: 15.5px; }
+}
+
+/* ---------- contact ---------- */
+.contact { background: var(--card); border-top: 1px solid var(--rule); }
+.contact-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(30px, 6vw, 80px); align-items: start; }
+.contact-side img { width: 110px; height: auto; margin-bottom: 18px; }
+.contact-side p { color: var(--ink-2); font-size: 18px; margin: 0 0 22px; max-width: 26em; }
+.mail-link {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  font-weight: 600; font-size: 18px; color: var(--deep);
+  padding: 12px 18px; border-radius: 999px; background: var(--mint-2);
+  word-break: break-all;
+}
+.mail-link svg { width: 20px; height: 20px; flex: none; }
+.note-small { font-size: 14.5px !important; color: var(--ink-3) !important; margin-top: 16px !important; }
+.contact-form { display: grid; gap: 16px; background: var(--paper); border: 1px solid var(--rule); border-radius: 28px; padding: clamp(20px, 3vw, 32px); }
+.contact-form label { display: grid; gap: 6px; font-size: 15px; font-weight: 600; color: var(--ink); }
+.contact-form input, .contact-form select, .contact-form textarea {
+  font: 400 17px/1.4 var(--sans); color: var(--ink);
+  background: #fff; border: 1.5px solid var(--rule); border-radius: 14px; padding: 13px 14px;
+  width: 100%; transition: border-color .2s, box-shadow .2s;
+}
+.contact-form textarea { resize: vertical; min-height: 120px; }
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus {
+  outline: none; border-color: var(--deep); box-shadow: 0 0 0 4px var(--mint-2);
+}
+.contact-form .btn { justify-content: center; border: 0; cursor: pointer; font-family: var(--sans); }
+@media (max-width: 860px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-side img { width: 80px; }
+  .contact-side p { font-size: 16.5px; }
+}
+
+/* frames follow the screenshot's own shape: no side cropping */
+.phone, .shot { aspect-ratio: auto !important; height: auto; }
+.phone .screen-img, .shot img { height: auto !important; aspect-ratio: 480 / 1040; object-fit: contain; }
+.contact.unset .mail-link, .contact.unset .contact-form .btn, .contact.unset .contact-form > .note-small { display: none; }
+.contact .soon-note { display: none; }
+.contact.unset .soon-note { display: block; font-weight: 600; color: var(--deep); }
+
+@media (max-width: 860px) { .feat-track .shot { width: min(240px, 66vw); } }
