@@ -502,3 +502,10 @@ footer { padding: 60px 0 0; overflow: hidden; border-top: 1px solid var(--ink); 
 .contact.unset .soon-note { display: block; font-weight: 600; color: var(--deep); }
 
 @media (max-width: 860px) { .feat-track .shot { width: min(240px, 66vw); } }
+
+/* contact form states */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.form-status { margin: 0; font-size: 16px; font-weight: 600; min-height: 1.4em; }
+.form-status.ok { color: var(--deep); }
+.form-status.err { color: #b3261e; }
+.contact-form .btn[disabled] { opacity: .7; cursor: progress; }

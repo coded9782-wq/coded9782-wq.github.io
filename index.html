@@ -298,13 +298,11 @@
         <div class="contact-side">
           <img src="assets/minty-waving.svg" alt="" width="120" height="120">
           <p>We read every message. Tell us what works, what doesn’t, or what you wish Minty could do.</p>
-          <a class="mail-link" id="mail-link" href="#">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>
-            <span id="mail-text"></span>
-          </a>
+          
           <p class="note-small">Please don’t send medical details or photos of prescriptions.</p>
         </div>
-        <form class="contact-form" id="contact-form">
+        <form class="contact-form" id="contact-form" novalidate>
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           <label>Your name<input name="name" autocomplete="name" required></label>
           <label>Your email<input name="email" type="email" autocomplete="email" required></label>
           <label>Topic
@@ -320,8 +318,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
             Send message
           </button>
-          <p class="soon-note">Our contact email is being set up — check back soon.</p>
-          <p class="note-small">Opens your email app with the message ready to send.</p>
+                    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
     </div>
@@ -345,17 +342,46 @@
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }), { rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('.rise').forEach((el) => io.observe(el));
-// Contact: set your public contact email here.
-  const CONTACT_EMAIL = 'CONTACT_EMAIL_HERE';
-  if (CONTACT_EMAIL.includes('_HERE')) document.querySelector('.contact').classList.add('unset');
-  document.getElementById('mail-text').textContent = CONTACT_EMAIL;
-  document.getElementById('mail-link').href = 'mailto:' + CONTACT_EMAIL;
-  document.getElementById('contact-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    const subject = 'Minty: ' + f.get('topic');
-    const body = f.get('message') + '\n\n— ' + f.get('name') + ' (' + f.get('email') + ')';
-    location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  // Contact form: sends straight to the RGTECH inbox through FormSubmit (free, no server).
+  const FORM_ENDPOINT = 'https://formsubmit.co/ajax/coded9782@gmail.com';
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  const btn = form.querySelector('button[type="submit"]');
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const f = new FormData(form);
+    if (f.get('_honey')) return; // bot
+    const name = String(f.get('name') || '').trim();
+    const email = String(f.get('email') || '').trim();
+    const message = String(f.get('message') || '').trim();
+    if (!name || !message || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      status.className = 'form-status err';
+      status.textContent = 'Please add your name, a valid email and a message.';
+      return;
+    }
+    btn.disabled = true; btn.lastChild.textContent = ' Sending…';
+    status.className = 'form-status'; status.textContent = '';
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name, email, topic: f.get('topic'), message,
+          _subject: 'Minty website: ' + f.get('topic') + ' from ' + name,
+          _replyto: email, _template: 'table', _captcha: 'false',
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || String(data.success) === 'false') throw new Error(data.message || 'send failed');
+      form.reset();
+      status.className = 'form-status ok';
+      status.textContent = 'Thank you! Your message was sent — we’ll reply by email soon.';
+    } catch (err) {
+      status.className = 'form-status err';
+      status.textContent = 'Sorry, that didn’t send. Please try again in a moment.';
+    } finally {
+      btn.disabled = false; btn.lastChild.textContent = ' Send message';
+    }
   });
 </script>
 </body>
