@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy — Minty</title>
+<meta name="author" content="RGTECH">
 <meta name="description" content="How Minty handles your data: everything stays on your phone.">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,9 +21,9 @@
   <div class="mono" style="color:var(--ink-3)">Legal</div>
   <h1>Privacy <em>policy</em></h1>
 <p><strong>Minty: Pill &amp; Care Reminder.</strong> Little nudges, big care.</p>
-<p>Last updated: <span class="fill">[date of release]</span> · Hosted at: <span class="fill">[hosted URL]</span>/privacy</p>
+<p>Last updated: <span class="fill">[date of release]</span> · Hosted at: https://mintycare.vercel.app/privacy.html</p>
 <h2>Who is responsible</h2>
-<p>Minty is made by <strong><span class="fill">[Developer name]</span></strong> (<span class="fill">[postal address, if required in your country]</span>). <span class="fill">[Developer name]</span> is the controller of the personal data described in this policy. For any question or data request, write to <strong><span class="fill">[contact email]</span></strong>.</p>
+<p>Minty is made by <strong>RGTECH</strong> (<span class="fill">[postal address, if required in your country]</span>). RGTECH is the controller of the personal data described in this policy. For any question or data request, write to <strong><span class="fill">[contact email]</span></strong>.</p>
 <p>Minty is a reminder and logging tool for regimens you enter. It does not diagnose, treat, recommend, calculate or change doses. It is not a medical device.</p>
 <h2>What Minty keeps</h2>
 <p>Minty keeps everything you enter in the app:</p>
@@ -81,19 +82,12 @@
 </ul>
 <p>If the app lock is on and you cannot unlock, the lock screen offers "Erase Minty and start over", which does the same without showing any data. Backup files you saved earlier are not touched.</p>
 <h2>Changes to this policy</h2>
-<p>If this policy changes, the new version ships with an app update and is shown in the app with its date. The hosted copy at <span class="fill">[hosted URL]</span>/privacy is updated at the same time.</p>
-<p>---</p>
-<h2>Notes for this build (remove before publishing if not applicable)</h2>
-<ul>
-<li><strong>Encryption at rest:</strong> the v1.0.0 build opens the database with SQLCipher (`SQLCIPHER_ENABLED = true`, `androidIsEncryption: true`) and falls back to a plaintext open if the encrypted open fails; Settings &gt; About shows which one this phone uses. Device verification is still on the real-device list (`docs/progress/stage-3-device-tests.md`). If a later build turns encryption off, change the sentence in "What Minty keeps" here and in `policyText.ts`.</li>
-<li><strong>Backups:</strong> "Export backup" writes an encrypted `.mpcbackup` (PBKDF2-SHA256 600 000 iterations + AES-256-GCM, password chosen by the user, not recoverable). See `docs/backup.md`.</li>
-<li><strong>Crash log:</strong> Settings &gt; Backup and data &gt; Crash log keeps the last 50 uncaught errors on the device and shares them only when the user taps Export (after the health-data warning).</li>
-<li><strong>Placeholders to fill:</strong> <span class="fill">[Developer name]</span>, <span class="fill">[postal address, if required in your country]</span>, <span class="fill">[contact email]</span>, <span class="fill">[hosted URL]</span>, <span class="fill">[date of release]</span>. Use the same name and email in the in-app policy (`POLICY_PLACEHOLDERS` in `src/features/privacy/policyText.ts`).</li>
-</ul>
+<p>If this policy changes, the new version ships with an app update and is shown in the app with its date. The hosted copy at https://mintycare.vercel.app/privacy.html is updated at the same time.</p>
+
 </main>
 <footer>
   <div class="wrap">
-    <div class="foot"><span>© 2026 Minty. Made with care.</span><nav><a href="index.html">Home</a><a href="index.html#get">Download</a></nav></div>
+    <div class="foot"><span>© 2026 <b>RGTECH</b>. Minty is made with care by RGTECH.</span><nav><a href="index.html">Home</a><a href="index.html#get">Download</a></nav></div>
     <div class="word" aria-hidden="true">minty<img src="assets/minty-happy.svg" alt=""></div>
   </div>
 </footer>

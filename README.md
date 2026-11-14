@@ -15,3 +15,9 @@ Source of truth: `My Pill Companion/docs/privacy-policy.md`.
 
 ## When Minty is live on Google Play
 In `index.html`, find `Coming soon to Google Play`: set the link `href` to your Play Store URL, remove `soon` from its class and `aria-disabled`, and change the text to `Get it on Google Play`. Point the hero button (`Get Minty · ₱100`) to the same URL.
+
+## Live
+- https://mintycare.vercel.app (Vercel, project `mintycare`)
+- https://coded9782-wq.github.io (GitHub Pages, auto on push)
+
+Redeploy Vercel after changes: `npx vercel deploy --prod --yes` in this folder.
