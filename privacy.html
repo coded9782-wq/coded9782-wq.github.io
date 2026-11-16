@@ -32,11 +32,14 @@
 <li>checkups and appointments</li>
 <li>refills and stock counts</li>
 <li>the activity feed of what happened in the app</li>
-<li>the optional cycle log (off by default)</li>
+<li>the optional cycle tracker (off by default): period days, flow, mood, symptoms and notes</li>
 <li>your settings</li>
 </ul>
 <p>This is health data. Minty stores it only on your device, in the app's private storage, which other apps cannot read. On Android the database is encrypted with SQLCipher using a key held by the device; if encryption cannot be turned on for a device, Settings &gt; About says so and the data stays protected by Android's file encryption. Android automatic backup and device-to-device transfer are turned off for Minty.</p>
 <p>If you turn on the optional <strong>app lock</strong>, Minty uses your phone's own screen lock, fingerprint or face unlock through the Android system prompt. Minty never sees or stores your fingerprint, face or PIN. It only learns from the system whether the unlock succeeded.</p>
+<p>The <strong>cycle tracker</strong> works out estimates (next period, fertile window, patterns) on your device from your own entries. Nothing about your cycle is ever synced, shown in notifications or widgets, or included in exports unless you tick it yourself.</p>
+<h2>Scanning a medicine label (optional)</h2>
+<p>If you scan a box or label, Minty uses your camera or a photo you pick. The text is read on your device; the photo is never uploaded and is not kept after reading. Only if you tap <strong>Check online</strong>, Minty sends a few words from the label (no photo and nothing about you) to the free RxNorm service of the U.S. National Library of Medicine to look up the medicine name.</p>
 <h2>How long it is kept</h2>
 <p>Your data stays on your device until you delete it. The activity feed keeps one year of entries; older entries are deleted automatically. Uninstalling Minty, or using <strong>Delete all data</strong>, removes everything.</p>
 <h2>No analytics, no tracking</h2>
