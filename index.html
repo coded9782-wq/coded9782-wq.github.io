@@ -35,13 +35,13 @@
   <!-- HERO -->
   <div class="wrap hero">
     <div>
-      <div class="kicker mono"><span><b>●</b> By RGTECH</span><span>Android · v1.0.1</span><span>Coming soon</span></div>
+      <div class="kicker mono"><span><b>●</b> By RGTECH</span><span>Android · v1.0.1</span><span>Early access</span></div>
       <h1>Little nudges,<br><em>big care.</em></h1>
       <p class="lede">Minty is a small, kind reminder for your pills, patches and checkups. It rings when it’s time, remembers what you took, and keeps it all in one place.</p>
       <div class="cta">
         <a class="btn" href="#get">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l9.3-9.7-9.3-9.7Zm10.3 8.6 2.7-2.8L6.4 1.8c-.4-.2-.8-.3-1.1-.2l9.6 9.3Zm0 2.2-9.6 9.3c.3.1.7 0 1.1-.2l11.2-6.3-2.7-2.8Zm4-3.9-3 1.7 2.9 3 3-1.7c1.1-.6 1.1-2.4 0-3Z"/></svg>
-          Coming soon to Google Play
+          Download with your code
         </a>
         <small>Android 8 and up</small>
       </div>
@@ -270,7 +270,7 @@
     <div class="wrap">
       <div class="head rise">
         <div class="mono">Get the app</div>
-        <h2>Coming soon to <em>Google Play.</em></h2>
+        <h2>Got a code? <em>Download it now.</em></h2>
       </div>
       <div class="get">
         <div class="ticket rise">
@@ -279,22 +279,26 @@
             <div><h3>Minty</h3><div class="meta mono">Pill &amp; care reminder</div></div>
           </div>
           <dl class="mono">
-            <div><dt>Version</dt><dd>1.0.1</dd></div>
+            <div><dt>Version</dt><dd id="dl-version">1.0.1</dd></div>
             <div><dt>Needs</dt><dd>Android 8+</dd></div>
             <div><dt>Ads</dt><dd>None</dd></div>
             <div><dt>Language</dt><dd>English</dd></div>
           </dl>
-          <a class="btn soon" href="#get" aria-disabled="true">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l9.3-9.7-9.3-9.7Zm10.3 8.6 2.7-2.8L6.4 1.8c-.4-.2-.8-.3-1.1-.2l9.6 9.3Zm0 2.2-9.6 9.3c.3.1.7 0 1.1-.2l11.2-6.3-2.7-2.8Zm4-3.9-3 1.7 2.9 3 3-1.7c1.1-.6 1.1-2.4 0-3Z"/></svg>
-            Coming soon to Google Play
-          </a>
+          <form class="code-form" id="code-form" novalidate>
+            <label for="dl-code">Download code</label>
+            <div class="code-row">
+              <input id="dl-code" name="code" inputmode="numeric" autocomplete="one-time-code" placeholder="e.g. 123456" maxlength="40" required>
+              <button class="btn" type="submit" id="dl-btn">Download</button>
+            </div>
+            <p class="code-msg" id="dl-msg" role="status" aria-live="polite"></p>
+          </form>
         </div>
         <div class="rise">
           <h3 class="side-title">How to get it</h3>
-          <p class="side-text">Minty is getting ready for the Google Play Store. Once it’s live, the button here will take you straight to it.</p>
+          <p class="side-text">Minty is in early access before Google Play. Each download code works once, so keep yours private.</p>
           <ol class="steps">
-            <li><div><b>Find Minty on Google Play</b><p>Search “Minty pill reminder”, or tap the button here once it’s live.</p></div></li>
-            <li><div><b>Tap Install</b><p>It installs like any other app from the Play Store.</p></div></li>
+            <li><div><b>Enter your code and tap Download</b><p>Do this on your Android phone. The app file (.apk) downloads straight away.</p></div></li>
+            <li><div><b>Open the file and tap Install</b><p>If Android asks, allow your browser to install apps. Already have Minty? Use <b>Settings → App updates</b> inside the app instead.</p></div></li>
             <li><div><b>Add your first medication</b><p>Allow notifications and alarms so your reminders can ring.</p></div></li>
           </ol>
         </div>
@@ -307,7 +311,8 @@
     <div class="wrap faq-wrap">
       <div class="mono" style="color:var(--deep);padding-top:26px">Questions</div>
       <div>
-        <details><summary>When can I get it?</summary><p>Minty is coming to Google Play soon. Check back here — the button above will take you straight to it.</p></details>
+        <details><summary>When can I get it?</summary><p>Now, in early access: enter your download code in the <a href="#get">Get the app</a> section on your Android phone. Each code works once. Minty is also coming to Google Play.</p></details>
+        <details><summary>How do I update Minty?</summary><p>Open Minty, go to <b>Settings → App updates</b> and tap <b>Check for updates</b>. If a new version is ready, enter a download code to get it. Your data stays on your phone.</p></details>
         <details><summary>What about iPhone?</summary><p>Not yet. Minty is Android-only for now; an iPhone version is planned.</p></details>
         <details><summary>Does Minty give medical advice?</summary><p>No. Minty reminds you and keeps a log of the plan you and your doctor already have. It never suggests, calculates or changes a dose, and it isn’t a medical device.</p></details>
         <details><summary>Is my cycle data private?</summary><p>Yes. The cycle tracker is off until you turn it on. Your entries stay on your phone, are never synced, and never appear in notifications or widgets. Predictions are estimates from your own log: they are not birth control and not medical advice.</p></details>
@@ -366,6 +371,33 @@
   </div>
 </footer>
 
+<script>
+(() => {
+  const form = document.getElementById('code-form');
+  if (!form) return;
+  const msg = document.getElementById('dl-msg');
+  const btn = document.getElementById('dl-btn');
+  fetch('/api/latest').then((r) => r.json()).then((d) => {
+    if (d && d.available && d.version) document.getElementById('dl-version').textContent = d.version;
+  }).catch(() => {});
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = document.getElementById('dl-code').value.trim();
+    if (!code) { msg.textContent = 'Enter your download code.'; msg.className = 'code-msg err'; return; }
+    btn.disabled = true; msg.className = 'code-msg'; msg.textContent = 'Checking your code…';
+    try {
+      const res = await fetch('/api/redeem', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code }) });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok || !d.ok) throw new Error(d.message || 'That code did not work.');
+      msg.className = 'code-msg ok';
+      msg.textContent = 'Your download is starting. This code is now used.';
+      window.location.href = d.downloadUrl;
+    } catch (err) {
+      msg.className = 'code-msg err'; msg.textContent = err.message;
+    } finally { btn.disabled = false; }
+  });
+})();
+</script>
 <script>
   // fade sections in as they scroll into view
   const io = new IntersectionObserver((es) => es.forEach((e) => {

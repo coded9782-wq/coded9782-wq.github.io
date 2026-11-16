@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Minty downloads admin</title>
+<style>
+  :root { --bg:#f3faf5; --card:#fff; --fg:#1f3b2d; --muted:#46604f; --accent:#1f7a4d; --edge:#cfe6d6; --bad:#a8402a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f2219; --card:#16301f; --fg:#e6f7ec; --muted:#a9c9b5; --accent:#7febb3; --edge:#2b5139; --bad:#ff9d85; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { margin: 0 0 4px; } h2 { margin: 0 0 12px; font-size: 1.15rem; }
+  .card { background:var(--card); border:1.5px solid var(--edge); border-radius:18px; padding:18px; margin-top:16px; }
+  input, button { font: inherit; border-radius: 12px; border: 1.5px solid var(--edge); padding: 10px 12px; background: var(--card); color: var(--fg); }
+  button { cursor: pointer; font-weight: 700; } button.primary { background: var(--accent); color: var(--card); border-color: var(--accent); }
+  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  table { width:100%; border-collapse: collapse; font-size: .95rem; } th, td { text-align:left; padding:8px 6px; border-top:1px solid var(--edge); vertical-align: top; }
+  .muted { color: var(--muted); font-size: .9rem; } .err { color: var(--bad); font-weight: 700; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:99px; font-size:.8rem; font-weight:700; border:1.5px solid var(--edge); }
+  .scroll { overflow-x:auto; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Minty downloads</h1>
+  <p class="muted">Download codes, the current app file and who used a code. Private page.</p>
+
+  <section class="card" id="login">
+    <h2>Admin key</h2>
+    <form class="row" id="loginForm">
+      <input id="key" type="password" autocomplete="current-password" placeholder="Admin key" required style="flex:1;min-width:220px">
+      <button class="primary">Open</button>
+    </form>
+    <p class="err" id="loginErr" hidden></p>
+  </section>
+
+  <div id="app" hidden>
+    <section class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2>Current app file</h2>
+        <div class="row"><button class="primary" id="dlApp" type="button">Download app file</button><button id="signOut" type="button">Sign out</button></div>
+      </div>
+      <p id="release" class="muted">None published yet.</p>
+      <p class="muted">Your own download never uses a code. The link works once.</p>
+      <p class="err" id="dlErr" hidden></p>
+    </section>
+
+    <section class="card">
+      <h2>New code</h2>
+      <form class="row" id="createForm">
+        <input id="newCode" placeholder="Code (empty = random 6 digits)" style="flex:1;min-width:200px">
+        <input id="newUses" type="number" min="1" max="1000" value="1" style="width:90px" aria-label="Downloads allowed">
+        <input id="newNote" placeholder="Note (who it is for)" style="flex:1;min-width:160px">
+        <button class="primary">Create</button>
+      </form>
+      <p class="err" id="createErr" hidden></p>
+    </section>
+
+    <section class="card">
+      <div class="row" style="justify-content:space-between"><h2>Codes</h2><button id="refresh" type="button">Refresh</button></div>
+      <div class="scroll"><table>
+        <thead><tr><th>Code</th><th>Used</th><th>Status</th><th>Note</th><th>Last used</th><th></th></tr></thead>
+        <tbody id="codes"></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2>Recent downloads</h2>
+      <div class="scroll"><table>
+        <thead><tr><th>When</th><th>Code</th><th>Device</th></tr></thead>
+        <tbody id="log"></tbody>
+      </table></div>
+    </section>
+  </div>
+</main>
+<script>
+(() => {
+  let key = '';
+  try { key = sessionStorage.getItem('mintyAdminKey') || ''; } catch {}
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  const when = (d) => d ? new Date(d).toLocaleString() : '—';
+
+  async function call(method, body) {
+    const res = await fetch('/api/admin', {
+      method,
+      headers: { 'x-admin-key': key, ...(body ? { 'content-type': 'application/json' } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) throw Object.assign(new Error('Wrong admin key.'), { auth: true });
+    if (res.status === 429) throw new Error(data.error || 'Locked. Try again later.');
+    if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+    return data;
+  }
+
+  function render(d) {
+    $('login').hidden = true; $('app').hidden = false;
+    const r = d.release;
+    $('release').innerHTML = r
+      ? `<b>Version ${esc(r.version)}</b> · ${r.size ? (r.size / 1e6).toFixed(1) + ' MB' : ''} · published ${esc(when(r.publishedAt))}${r.notes ? '<br>' + esc(r.notes) : ''}`
+      : 'None published yet. Run <code>node scripts/publish-release.mjs app.apk 1.1.0</code>.';
+    $('codes').innerHTML = d.codes.length ? d.codes.map((c) => {
+      const left = c.uses - c.used;
+      const status = c.revoked ? 'Revoked' : left > 0 ? `${left} left` : 'Used up';
+      return `<tr><td><b>${esc(c.code)}</b></td><td>${c.used} / ${c.uses}</td><td><span class="pill">${status}</span></td>
+        <td>${esc(c.note)}</td><td class="muted">${esc(when(c.lastUsedAt))}</td>
+        <td class="row">
+          ${c.revoked ? `<button data-a="restore" data-c="${esc(c.code)}">Restore</button>` : `<button data-a="revoke" data-c="${esc(c.code)}">Revoke</button>`}
+          <button data-a="reset" data-c="${esc(c.code)}">Reset</button>
+          <button data-a="delete" data-c="${esc(c.code)}">Delete</button>
+        </td></tr>`;
+    }).join('') : '<tr><td colspan="6" class="muted">No codes yet.</td></tr>';
+    $('log').innerHTML = d.redemptions.length ? d.redemptions.map((x) =>
+      `<tr><td>${esc(when(x.at))}</td><td>${esc(x.code)}</td><td class="muted">${esc(x.ua)}</td></tr>`).join('')
+      : '<tr><td colspan="3" class="muted">No downloads yet.</td></tr>';
+  }
+
+  async function load() {
+    try { render(await call('GET')); }
+    catch (e) { $('login').hidden = false; $('app').hidden = true; if (key) { $('loginErr').textContent = e.message; $('loginErr').hidden = false; } }
+  }
+
+  $('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault(); key = $('key').value.trim();
+    try { sessionStorage.setItem('mintyAdminKey', key); } catch {}
+    load();
+  });
+  $('refresh').addEventListener('click', load);
+  $('dlApp').addEventListener('click', async () => {
+    $('dlErr').hidden = true;
+    try { const d = await call('POST', { action: 'download' }); window.location.href = d.downloadUrl; }
+    catch (err) { $('dlErr').textContent = err.message; $('dlErr').hidden = false; }
+  });
+  function signOut() {
+    key = ''; try { sessionStorage.removeItem('mintyAdminKey'); } catch {}
+    $('key').value = ''; $('app').hidden = true; $('login').hidden = false; $('loginErr').hidden = true;
+  }
+  $('signOut').addEventListener('click', signOut);
+  // Auto sign-out after 15 minutes without activity.
+  let idle;
+  const bump = () => { clearTimeout(idle); idle = setTimeout(() => { if (key) signOut(); }, 15 * 60 * 1000); };
+  ['click', 'keydown', 'pointermove'].forEach((ev) => document.addEventListener(ev, bump, { passive: true }));
+  bump();
+  $('createForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); $('createErr').hidden = true;
+    try {
+      render(await call('POST', { action: 'create', code: $('newCode').value, uses: $('newUses').value, note: $('newNote').value }));
+      $('newCode').value = ''; $('newNote').value = ''; $('newUses').value = '1';
+    } catch (err) { $('createErr').textContent = err.message; $('createErr').hidden = false; }
+  });
+  $('codes').addEventListener('click', async (e) => {
+    const b = e.target.closest('button[data-a]'); if (!b) return;
+    if (b.dataset.a === 'delete' && !window.confirm(`Delete code ${b.dataset.c}?`)) return;
+    try { render(await call('POST', { action: b.dataset.a, code: b.dataset.c })); } catch (err) { alert(err.message); }
+  });
+  if (key) load();
+})();
+</script>
+</body>
+</html>

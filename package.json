@@ -1,0 +1,10 @@
+{
+  "name": "mintycare-site",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@upstash/redis": "1.41.0",
+    "@vercel/blob": "2.9.0"
+  }
+}
