@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Minty — little nudges, big care</title>
 <meta name="author" content="RGTECH">
-<meta name="description" content="Minty by RGTECH is a gentle pill and care reminder for Android. Doses, packs, refills and checkups — all in one gentle app.">
+<meta name="description" content="Minty by RGTECH is a gentle pill and care reminder for Android. Doses, packs, refills, checkups and a private cycle tracker — all in one gentle app.">
 <meta name="theme-color" content="#f8f6f0">
 <meta property="og:title" content="Minty — little nudges, big care">
 <meta property="og:description" content="A gentle pill and care reminder for Android. No ads, no tracking.">
@@ -14,28 +14,37 @@
 <link rel="apple-touch-icon" href="assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="preload" as="image" href="assets/screens/today.jpg">
 </head>
 <body>
 
-<header class="wrap bar">
-  <a class="brand" href="#top" aria-label="Minty home"><img src="assets/icon.svg" alt=""><span>minty</span></a>
-  <nav>
-    <a href="#day">How it feels</a>
-    <a href="#features">Features</a>
-    <a href="#privacy">Privacy</a>
-    <a href="#contact">Contact</a>
-    <a class="pill-link" href="#get">Get the app</a>
-  </nav>
+<div class="say" id="say" aria-hidden="true"><span class="t"></span></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<header class="topbar" id="topbar">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Minty home"><img src="assets/icon.svg" alt=""><span>minty</span></a>
+    <nav>
+      <a href="#day">How it feels</a>
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#contact">Contact</a>
+      <a class="pill-link" href="#get">Get the app</a>
+    </nav>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
 </header>
 
 <main id="top">
 
   <!-- HERO -->
-  <div class="wrap hero">
-    <div>
-      <div class="kicker mono"><span><b>●</b> By RGTECH</span><span>Android · v1.0.1</span><span>Early access</span></div>
+  <div class="wrap hero" data-bg="#f8f6f0">
+    <div class="hero-copy">
+      <div class="kicker mono"><span><b>●</b> By RGTECH</span><span>Android · v1.1</span><span>Early access</span></div>
       <h1>Little nudges,<br><em>big care.</em></h1>
       <p class="lede">Minty is a small, kind reminder for your pills, patches and checkups. It rings when it’s time, remembers what you took, and keeps it all in one place.</p>
       <div class="cta">
@@ -45,14 +54,11 @@
         </a>
         <small>Android 8 and up</small>
       </div>
+      <p class="scroll-cue mono" aria-hidden="true"><span></span>Scroll to explore</p>
     </div>
-
-    <div class="stage" aria-hidden="true">
-      <div class="note">one tap<br>and it’s logged
-        <svg viewBox="0 0 80 50" fill="none" stroke="#4a5c51" stroke-width="1.6" stroke-linecap="round"><path d="M4 30C22 34 40 26 54 12"/><path d="M44 10l11 1-2 11"/></svg>
-      </div>
-      <div class="phone"><img class="screen-img" src="assets/screens/today.jpg" alt="" width="960" height="2080"></div>
-      <img class="peek" src="assets/minty-waving.svg" alt="">
+    <div class="slot slot-hero" data-phone data-screen="today" data-ry="-24" data-rx="5" data-rz="-4"
+         data-say="Hi, I’m Minty! I’ll remember your meds, so you don’t have to." data-minty="side" data-mood="wave" data-msize="0.62" data-perch="right">
+      <img class="fb fb-phone" src="assets/screens/today.jpg" alt="Minty Today screen with the next dose due and a Taken button" width="960" height="2080">
     </div>
   </div>
 
@@ -66,50 +72,57 @@
   </div>
 
   <!-- A DAY -->
-  <section id="day">
-    <div class="wrap">
-      <div class="head rise">
-        <div class="mono">How it feels</div>
-        <h2>A regular day, <em>a little lighter.</em></h2>
+  <section id="day" data-bg="#f1f6ee">
+    <div class="wrap split">
+      <div>
+        <div class="head rise">
+          <div class="mono">How it feels</div>
+          <h2>A regular day, <em>a little lighter.</em></h2>
+        </div>
+        <div class="day rise">
+          <div class="moment"><span class="dot fill"></span>
+            <time>8:00<small>am</small></time>
+            <h3>A gentle ring</h3>
+            <p>Your reminder sounds even if the phone is asleep. Tap Taken right from the notification — no need to open anything.</p>
+          </div>
+          <div class="moment"><span class="dot"></span>
+            <time>8:10<small>am</small></time>
+            <h3>Busy? Snooze it</h3>
+            <p>Minty waits and asks again. If you already took it earlier, log it with the real time.</p>
+          </div>
+          <div class="moment"><span class="dot"></span>
+            <time>2:30<small>pm</small></time>
+            <h3>Running low</h3>
+            <p>It counts what’s left and tells you a few days before the box runs out. Tap Refilled when you restock.</p>
+          </div>
+          <div class="moment"><span class="dot fill"></span>
+            <time>9:00<small>pm</small></time>
+            <h3>All done for today</h3>
+            <p>Minty does a happy little wiggle. Tomorrow, it starts again — quietly.</p>
+            <div class="slot slot-mini" data-say="All done today. Proud of you!" data-minty="fill" data-mood="cheer"><img class="fb" src="assets/minty-celebrating.svg" alt=""></div>
+          </div>
+        </div>
       </div>
-      <div class="day rise">
-        <div class="moment"><span class="dot fill"></span>
-          <time>8:00<small>am</small></time>
-          <h3>A gentle ring</h3>
-          <p>Your reminder sounds even if the phone is asleep. Tap Taken right from the notification — no need to open anything.</p>
-        </div>
-        <div class="moment"><span class="dot"></span>
-          <time>8:10<small>am</small></time>
-          <h3>Busy? Snooze it</h3>
-          <p>Minty waits and asks again. If you already took it earlier, log it with the real time.</p>
-        </div>
-        <div class="moment"><span class="dot"></span>
-          <time>2:30<small>pm</small></time>
-          <h3>Running low</h3>
-          <p>It counts what’s left and tells you a few days before the box runs out. Tap Refilled when you restock.</p>
-        </div>
-        <div class="moment"><span class="dot fill"></span>
-          <time>9:00<small>pm</small></time>
-          <h3>All done for today</h3>
-          <p>Minty does a happy little wiggle. Tomorrow, it starts again — quietly.</p>
-        </div>
+      <div class="slot slot-side" data-phone data-screen="meds" data-ry="20" data-rx="3" data-rz="3">
+        <img class="fb fb-phone" src="assets/screens/meds.jpg" alt="Minty medication list" width="960" height="2080" loading="lazy">
       </div>
     </div>
   </section>
 
   <!-- FEATURES -->
-  <section class="features" id="features">
+  <section class="features" id="features" data-bg="#ffffff">
     <div class="wrap">
       <div class="head rise">
         <div class="mono">Features</div>
         <h2>Made for real routines, <em>not perfect ones.</em></h2>
       </div>
 
-      <p class="swipe-hint mono">Swipe to see more →</p>
-      <div class="feat-track">
-      <article class="feat rise">
-        <figure class="shot"><img src="assets/screens/today.jpg" alt="Minty Today screen: Losartan 50 mg due now, with Taken, Snooze, Skip and Other time buttons, and a blood test in 3 days" width="960" height="2080"></figure>
-        <div class="copy">
+      <div class="feat-list">
+      <article class="feat">
+        <div class="slot slot-feat" data-phone data-spin data-screen="today" data-ry="-18" data-say="Here’s everything for today. One gentle step at a time." data-rz="-2" data-minty="perch" data-mood="look" data-perch="right">
+          <img class="fb fb-phone" src="assets/screens/today.jpg" alt="Minty Today screen: Losartan 50 mg due now, with Taken, Snooze, Skip and Other time buttons, and a blood test in 3 days" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">Today</span>
           <h3>Never wonder <em>“did I take it?”</em> again.</h3>
           <p class="why"><b>Why you need it:</b> when the days blur together, it’s easy to take a dose twice or miss it completely. Minty shows what’s due right now and what’s already done — no guessing.</p>
@@ -121,9 +134,11 @@
         </div>
       </article>
 
-      <article class="feat flip rise">
-        <figure class="shot"><img src="assets/screens/pack.jpg" alt="Pack tracker: pill 16 of 21, every pill so far marked taken" width="960" height="2080"></figure>
-        <div class="copy">
+      <article class="feat flip">
+        <div class="slot slot-feat" data-phone data-spin data-screen="pack" data-say="Pill 16 of 21. I’m counting with you." data-ry="18" data-rz="2" data-minty="perch" data-mood="happy" data-perch="left">
+          <img class="fb fb-phone" src="assets/screens/pack.jpg" alt="Pack tracker: pill 16 of 21, every pill so far marked taken" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">Packs, patches &amp; rings</span>
           <h3>Always know <em>which pill you’re on.</em></h3>
           <p class="why"><b>Why you need it:</b> with 21-day or 84-day packs, weekly patches and monthly rings, losing count happens — and it matters. Minty counts for you, including break and placebo weeks.</p>
@@ -135,9 +150,11 @@
         </div>
       </article>
 
-      <article class="feat rise">
-        <figure class="shot"><img src="assets/screens/calendar.jpg" alt="November calendar: taken days ticked, one missed day, checkups marked" width="960" height="2080"></figure>
-        <div class="copy">
+      <article class="feat">
+        <div class="slot slot-feat" data-phone data-spin data-screen="calendar" data-say="Your whole month, at a glance." data-ry="-18" data-rz="-2" data-minty="perch" data-mood="look" data-perch="right">
+          <img class="fb fb-phone" src="assets/screens/calendar.jpg" alt="November calendar: taken days ticked, one missed day, checkups marked" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">Calendar</span>
           <h3>Your whole month, <em>in one look.</em></h3>
           <p class="why"><b>Why you need it:</b> memory isn’t reliable. A calendar that marks each day as taken, skipped or missed shows patterns you’d never notice — like always forgetting on weekends.</p>
@@ -149,9 +166,11 @@
         </div>
       </article>
 
-      <article class="feat flip rise">
-        <figure class="shot"><img src="assets/screens/history.jpg" alt="History: 9-day streak, 97% of doses taken, 100% on time" width="960" height="2080"></figure>
-        <div class="copy">
+      <article class="feat flip">
+        <div class="slot slot-feat" data-phone data-spin data-screen="history" data-say="Look at that streak! You’re doing great." data-ry="18" data-rz="2" data-minty="perch" data-mood="cheer" data-perch="left">
+          <img class="fb fb-phone" src="assets/screens/history.jpg" alt="History: 9-day streak, 97% of doses taken, 100% on time" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">History</span>
           <h3>Progress you can <em>actually see.</em></h3>
           <p class="why"><b>Why you need it:</b> sticking to a routine is easier when you can see it working. Streaks and simple percentages show your effort honestly — no guilt trips, just facts.</p>
@@ -163,9 +182,11 @@
         </div>
       </article>
 
-      <article class="feat rise">
-        <figure class="shot"><img src="assets/screens/report.jpg" alt="Doctor report: choose medications and a period, then create a PDF" width="960" height="2080"></figure>
-        <div class="copy">
+      <article class="feat">
+        <div class="slot slot-feat" data-phone data-spin data-screen="report" data-say="Ready for your next doctor visit." data-ry="-18" data-rz="-2" data-minty="perch" data-mood="look" data-perch="right">
+          <img class="fb fb-phone" src="assets/screens/report.jpg" alt="Doctor report: choose medications and a period, then create a PDF" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">Doctor report</span>
           <h3>Walk into appointments <em>prepared.</em></h3>
           <p class="why"><b>Why you need it:</b> “How have you been taking your medicine?” is hard to answer from memory. Hand your doctor a clean PDF instead — every dose, every skip and the reason why.</p>
@@ -177,9 +198,11 @@
         </div>
       </article>
 
-      <article class="feat flip rise">
-        <figure class="shot"><img src="assets/screens/checkups.jpg" alt="Checkups: fasting blood test, blood pressure review, teeth cleaning, annual check-up" width="960" height="2080"></figure>
-        <div class="copy">
+      <article class="feat flip">
+        <div class="slot slot-feat" data-phone data-spin data-screen="checkups" data-say="Your check-up is coming. I’ll remind you." data-ry="18" data-rz="2" data-minty="perch" data-mood="happy" data-perch="left">
+          <img class="fb fb-phone" src="assets/screens/checkups.jpg" alt="Checkups: fasting blood test, blood pressure review, teeth cleaning, annual check-up" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">Checkups</span>
           <h3>Visits, tests and follow-ups, <em>remembered.</em></h3>
           <p class="why"><b>Why you need it:</b> a lab test booked three weeks ahead is easy to forget, and a missed follow-up can mean waiting weeks for another slot. Minty reminds you before it’s time.</p>
@@ -191,9 +214,11 @@
         </div>
       </article>
 
-      <article class="feat rise">
-        <figure class="shot"><img src="assets/screens/cycle.jpg" alt="Cycle tracker: a cycle ring on day 13, fertile window estimate, period expected in 17 days" width="960" height="2080" loading="lazy"></figure>
-        <div class="copy">
+      <article class="feat">
+        <div class="slot slot-feat" data-phone data-spin data-screen="cycle" data-say="How are you feeling today?" data-ry="-18" data-rz="-2" data-minty="perch" data-mood="look" data-perch="right">
+          <img class="fb fb-phone" src="assets/screens/cycle.jpg" alt="Cycle tracker: a cycle ring on day 13, fertile window estimate, period expected in 17 days" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">New · Cycle tracker</span>
           <h3>Know your cycle <em>before it surprises you.</em></h3>
           <p class="why"><b>Why you need it:</b> a period that shows up early ruins a day. Minty learns your rhythm from your own log and shows where you are now, when your next period is likely and how many days are left.</p>
@@ -205,9 +230,11 @@
         </div>
       </article>
 
-      <article class="feat flip rise">
-        <figure class="shot"><img src="assets/screens/cycle-insights.jpg" alt="Cycle insights: average cycle 29 days, period 5 days, very regular, and symptom patterns" width="960" height="2080" loading="lazy"></figure>
-        <div class="copy">
+      <article class="feat flip">
+        <div class="slot slot-feat" data-phone data-spin data-screen="cycle-insights" data-say="Your patterns, private to you." data-ry="18" data-rz="2" data-minty="perch" data-mood="happy" data-perch="left">
+          <img class="fb fb-phone" src="assets/screens/cycle-insights.jpg" alt="Cycle insights: average cycle 29 days, period 5 days, very regular, and symptom patterns" width="960" height="2080" loading="lazy">
+        </div>
+        <div class="copy rise">
           <span class="tag">New · Cycle insights</span>
           <h3>Your body’s patterns, <em>finally visible.</em></h3>
           <p class="why"><b>Why you need it:</b> “Is this normal for me?” is hard to answer from memory. Minty turns your log into clear charts and plain sentences, like <i>“Bloating: usually in the 5 days before your period.”</i></p>
@@ -234,8 +261,9 @@
   </section>
 
   <!-- WHO -->
-  <section class="who">
+  <section class="who" data-bg="#f8f6f0">
     <div class="wrap">
+      <div class="slot slot-who" data-say="Whoever you’re caring for, I’ve got you." data-minty="fill" data-mood="happy" data-phone="hide"><img class="fb" src="assets/minty-proud.svg" alt=""></div>
       <div class="head rise">
         <div class="mono">Who it’s for</div>
         <h2>If you take something regularly, <em>Minty helps.</em></h2>
@@ -250,36 +278,41 @@
   </section>
 
   <!-- PRIVACY -->
-  <section class="dark" id="privacy">
-    <img class="sleepy" src="assets/minty-sleepy.svg" alt="">
-    <div class="wrap">
-      <div class="head rise">
-        <div class="mono">Privacy</div>
-        <h2>Your health is <em>nobody’s business</em> but yours.</h2>
+  <section class="dark" id="privacy" data-bg="#1f4a35">
+    <div class="wrap split">
+      <div>
+        <div class="head rise">
+          <div class="mono">Privacy</div>
+          <h2>Your health is <em>nobody’s business</em> but yours.</h2>
+        </div>
+        <div class="grid rise">
+          <div><h3>Never sold, never shared</h3><p>Your health data is yours. Minty doesn’t sell it, rent it or use it for advertising — ever.</p></div>
+          <div><h3>Encrypted on the phone</h3><p>Your list is stored in an encrypted database that other apps can’t read. Phone backups skip it on purpose.</p></div>
+          <div><h3>No analytics, no ads</h3><p>No tracking SDKs, no ad networks, no crash reporters. Read the <a href="privacy.html">full privacy policy</a>.</p></div>
+        </div>
       </div>
-      <div class="grid rise">
-        <div><h3>Never sold, never shared</h3><p>Your health data is yours. Minty doesn’t sell it, rent it or use it for advertising — ever.</p></div>
-        <div><h3>Encrypted on the phone</h3><p>Your list is stored in an encrypted database that other apps can’t read. Phone backups skip it on purpose.</p></div>
-        <div><h3>No analytics, no ads</h3><p>No tracking SDKs, no ad networks, no crash reporters. Read the <a href="privacy.html">full privacy policy</a>.</p></div>
+      <div class="slot slot-side slot-privacy" data-phone data-screen="today" data-ry="200" data-rx="6" data-rz="-6"
+           data-say="Shh… your data stays on your phone." data-minty="side" data-mood="sleep" data-msize="0.7" data-perch="right">
+        <img class="fb" src="assets/minty-sleepy.svg" alt="">
       </div>
     </div>
   </section>
 
   <!-- GET IT -->
-  <section id="get">
+  <section id="get" data-bg="#eef7f0">
     <div class="wrap">
       <div class="head rise">
         <div class="mono">Get the app</div>
         <h2>Got a code? <em>Download it now.</em></h2>
       </div>
       <div class="get">
-        <div class="ticket rise">
+        <div class="ticket rise" data-say="Almost there! Pop in your code." data-minty="perch" data-mood="cheer" data-msize="0.22" data-perch="right">
           <div class="top">
-            <img src="assets/icon-192.png" alt="">
+            <img src="assets/icon-192.png" alt="" data-phone="hide">
             <div><h3>Minty</h3><div class="meta mono">Pill &amp; care reminder</div></div>
           </div>
           <dl class="mono">
-            <div><dt>Version</dt><dd id="dl-version">1.0.1</dd></div>
+            <div><dt>Version</dt><dd id="dl-version">1.1.0</dd></div>
             <div><dt>Needs</dt><dd>Android 8+</dd></div>
             <div><dt>Ads</dt><dd>None</dd></div>
             <div><dt>Language</dt><dd>English</dd></div>
@@ -307,7 +340,7 @@
   </section>
 
   <!-- FAQ -->
-  <section class="faq" style="padding-top:0">
+  <section class="faq" style="padding-top:0" data-bg="#f8f6f0">
     <div class="wrap faq-wrap">
       <div class="mono" style="color:var(--deep);padding-top:26px">Questions</div>
       <div>
@@ -321,9 +354,8 @@
     </div>
   </section>
 
-
   <!-- CONTACT -->
-  <section class="contact" id="contact">
+  <section class="contact" id="contact" data-bg="#ffffff">
     <div class="wrap">
       <div class="head rise">
         <div class="mono">Contact us</div>
@@ -331,9 +363,8 @@
       </div>
       <div class="contact-grid rise">
         <div class="contact-side">
-          <img src="assets/minty-waving.svg" alt="" width="120" height="120">
+          <div class="slot slot-contact" data-say="Need anything? I’m here for you." data-minty="fill" data-mood="wave"><img class="fb" src="assets/minty-waving.svg" alt="" width="120" height="120"></div>
           <p>We read every message. Tell us what works, what doesn’t, or what you wish Minty could do.</p>
-          
           <p class="note-small">Please don’t send medical details or photos of prescriptions.</p>
         </div>
         <form class="contact-form" id="contact-form" novalidate>
@@ -353,7 +384,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
             Send message
           </button>
-                    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
     </div>
@@ -361,7 +392,7 @@
 
 </main>
 
-<footer>
+<footer data-bg="#f8f6f0">
   <div class="wrap">
     <div class="foot">
       <span>© 2026 <b>RGTECH</b>. Minty is made with care by RGTECH.</span>
@@ -370,6 +401,14 @@
     <div class="word" aria-hidden="true">minty<img src="assets/minty-happy.svg" alt=""></div>
   </div>
 </footer>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script type="module" src="js/scene.js"></script>
 
 <script>
 (() => {
@@ -391,6 +430,7 @@
       if (!res.ok || !d.ok) throw new Error(d.message || 'That code did not work.');
       msg.className = 'code-msg ok';
       msg.textContent = 'Your download is starting. This code is now used.';
+      window.dispatchEvent(new CustomEvent('minty:cheer'));
       window.location.href = d.downloadUrl;
     } catch (err) {
       msg.className = 'code-msg err'; msg.textContent = err.message;
@@ -404,6 +444,13 @@
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }), { rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('.rise').forEach((el) => io.observe(el));
+  // highlight the nav link of the section in view
+  const links = [...document.querySelectorAll('.bar nav a[href^="#"]')];
+  const navIo = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  links.forEach((a) => { const s = document.querySelector(a.getAttribute('href')); if (s) navIo.observe(s); });
   // Contact form: sends straight to the RGTECH inbox through FormSubmit (free, no server).
   const FORM_ENDPOINT = 'https://formsubmit.co/ajax/coded9782@gmail.com';
   const form = document.getElementById('contact-form');
