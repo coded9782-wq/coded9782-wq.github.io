@@ -26,7 +26,7 @@ export function db() {
 const CORS = {
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, OPTIONS',
-  'access-control-allow-headers': 'content-type',
+  'access-control-allow-headers': 'content-type, x-app-key',
   'cache-control': 'no-store',
 };
 
